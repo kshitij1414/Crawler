@@ -8,10 +8,10 @@ Created on Mon Jan 28 19:04:48 2019
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[7]:
-
-
 from selenium import webdriver
+from selenium.webdriver.common.proxy import Proxy, ProxyType
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.proxy import *
 from selenium.common.exceptions import JavascriptException
 import time
 from datetime import date
@@ -20,7 +20,22 @@ import json
 import requests
 
 def scraper(url,Dep_date,Dest):
-    browser = webdriver.Firefox()
+    proxy = Proxy()
+    PROXY=  'zproxy.lum-superproxy.io:22225'
+    proxy.http_proxy = PROXY
+    proxy.ftp_proxy = PROXY
+    proxy.sslProxy = PROXY
+    proxy.proxy_type = ProxyType.MANUAL
+    
+    proxy.socksUsername = 'lum-customer-hl_66084dfd-zone-static'
+    proxy.socksPassword = "dkacqfyc6h9l"
+    
+    capabilities = webdriver.DesiredCapabilities.CHROME
+
+    proxy.add_to_capabilities(capabilities)
+
+    browser = webdriver.Chrome(desired_capabilities=capabilities)
+    
     browser.get(url)
     time.sleep(10)
     i=0
@@ -62,7 +77,6 @@ def scraper(url,Dep_date,Dest):
     #print(json_arr)
     browser.quit()
     
-# In[ ]:
 
 def invoke() :
   loop=[3,7,9,21]
@@ -85,7 +99,7 @@ def invoke() :
         Dep_date2= failure_arr[k]
         scraper(url,Dep_date2,Dest)
         k+=1
-# In[ ]:
+
 invoke()
 
 
